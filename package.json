@@ -1,8 +1,21 @@
 {
-  "name": "typid-list",
+  "name": "@kit-data-manager/webcomponent_typed-pid-maker_pid-list",
   "description": "Display PIDs known by a given Typed PID Maker instance. (Webcomponent)",
   "private": false,
-  "version": "0.3.0",
+  "version": "0.3.1",
+  "license": "Apache License 2.0",
+  "keywords": [
+    "FAIR Digital Object",
+    "Typed PID Maker",
+    "Persistent Identifier"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kit-data-manager/webcomponent_typed-pid-maker_pid-list"
+  },
+  "bugs": {
+    "url": "https://github.com/kit-data-manager/webcomponent_typed-pid-maker_pid-list/issues"
+  },
   "type": "module",
   "scripts": {
     "dev": "vite",
