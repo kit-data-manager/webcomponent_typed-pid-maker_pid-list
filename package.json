@@ -2,7 +2,7 @@
   "name": "@kit-data-manager/webcomponent_typed-pid-maker_pid-list",
   "description": "Display PIDs known by a given Typed PID Maker instance. (Webcomponent)",
   "private": false,
-  "version": "0.3.3",
+  "version": "0.3.4",
   "license": "Apache License 2.0",
   "keywords": [
     "FAIR Digital Object",
