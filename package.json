@@ -17,6 +17,7 @@
     "url": "https://github.com/kit-data-manager/webcomponent_typed-pid-maker_pid-list/issues"
   },
   "type": "module",
+  "main": "./dist/typid-known-pids-table.umd.js",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
