@@ -132,6 +132,7 @@ export class TypidKnownPidsTable extends HTMLElement {
     console.log(name + "changed to " + newValue)
     if (name == ATTRIBUTES[0]) {
       this.baseUrl = newValue;
+      this.connectedCallback();
     }
   }
 }
