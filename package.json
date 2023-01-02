@@ -30,6 +30,6 @@
     "vite": "^4.0.3"
   },
   "dependencies": {
-    "tabulator-tables": "^5.4.2"
+    "tabulator-tables": "^5.4.3"
   }
 }
