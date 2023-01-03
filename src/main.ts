@@ -2,20 +2,43 @@ import tableStyles from './style.scss?inline'
 
 import templateContent from './template.html?raw'
 
-import { TabulatorFull as Tabulator } from 'tabulator-tables';
+import { RowComponent, TabulatorFull as Tabulator } from 'tabulator-tables';
+
+type OnRowClickInstructions = string | ((event: UIEvent, row: RowComponent) => void)
 
 const ATTRIBUTES: string[] = [
-  "base-url"
+  "base-url",
+  "onrowclick"
 ];
 
 export class TypidKnownPidsTable extends HTMLElement {
 
-  #shadowRoot: ShadowRoot
-  table: Tabulator | null = null
-
+  shadowRoot: ShadowRoot;
+  private table: Tabulator | null = null;
+  
   // --- Attributes accessible from the HTML tag:
   baseUrl: URL = new URL("http://localhost:8090")
-  // --------------------------------------------
+  _onRowClick: OnRowClickInstructions = (_event, row) => {
+    window.open(
+      'https://kit-data-manager.github.io/fairdoscope/?pid=' + row.getData().pid,
+      '_blank'
+    )
+  }
+
+  set onRowClick(newValue: OnRowClickInstructions) {
+    this._onRowClick = newValue;
+    if (this.table != null) {
+      this.table.on("rowClick", this.rowEventHandler);
+    }
+  }
+  
+  rowEventHandler = (event: UIEvent, row: RowComponent) => {
+    if (typeof this._onRowClick == 'string') {
+      eval(this._onRowClick)
+    } else if (typeof this._onRowClick == 'function') {
+      this._onRowClick(event, row)
+    }
+  }
 
   /**
    * Contruct element properties etc, without DOM access.
@@ -30,11 +53,11 @@ export class TypidKnownPidsTable extends HTMLElement {
   constructor() {
     super();
     // Create Shadow DOM
-    this.#shadowRoot = this.attachShadow({ mode: 'open' })
+    this.shadowRoot = this.attachShadow({ mode: 'open' })
     // Apply HTML Template to shadow DOM
     const template = document.createElement('template')
     template.innerHTML = templateContent
-    this.#shadowRoot.append(template.content.cloneNode(true))
+    this.shadowRoot.append(template.content.cloneNode(true))
   }
 
   /**
@@ -69,11 +92,11 @@ export class TypidKnownPidsTable extends HTMLElement {
       this.baseUrl = new URL(baseUrl)
     }
 
-    let tableHolder = this.#shadowRoot.getElementById("typed-pid-maker-known-pids-table")
+    let tableHolder = this.shadowRoot.getElementById("typed-pid-maker-known-pids-table")
     if (tableHolder != null) {
       let styleTag = document.createElement("style")
       styleTag.textContent = tableStyles
-      this.#shadowRoot.appendChild(styleTag)
+      this.shadowRoot.appendChild(styleTag)
       
       this.table = new Tabulator(tableHolder, {
         height: "auto", // Set height of table (in CSS or here), this enables the Virtual DOM and improves render speed dramatically (can be any valid css height value)
@@ -98,9 +121,7 @@ export class TypidKnownPidsTable extends HTMLElement {
         paginationSizeSelector: true
       });
       //trigger an alert message when the row is clicked
-      this.table.on("rowClick", function (_e, row) {
-        alert("Row " + row.getData().pid + " Clicked!!!!");
-      });
+      this.table.on("rowClick", this.rowEventHandler);
     } else {
       console.error("Could not find the tag which should hold the table.");
     }
@@ -129,10 +150,11 @@ export class TypidKnownPidsTable extends HTMLElement {
    * @param newValue attributes value after the change
    */
   attributeChangedCallback(name: string, _oldValue: any, newValue: any) {
-    console.log(name + "changed to " + newValue)
     if (name == ATTRIBUTES[0]) {
       this.baseUrl = newValue;
       this.connectedCallback();
+    } else if (name == ATTRIBUTES[1]) {
+      this.onRowClick = newValue; // uses setter
     }
   }
 }
